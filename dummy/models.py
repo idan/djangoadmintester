@@ -10,7 +10,7 @@ class AllFields(models.Model):
     m_EmailField = models.EmailField("EmailField")
     m_DecimalField = models.DecimalField("DecimalField", max_digits=10, decimal_places=2)
     m_FloatField = models.FloatField("FloatField")
-    m_IntegerField = models.IntegerField("InteerField")
+    m_IntegerField = models.IntegerField("IntegerField")
     m_PositiveIntegerField = models.PositiveIntegerField("PositiveIntegerField")
     m_PositiveSmallIntegerField = models.PositiveSmallIntegerField("PositiveSmallIntegerField")
     m_IPAddressField = models.IPAddressField("IPAddressField")
@@ -85,12 +85,20 @@ class StackedInlineTest(models.Model):
     """ For testing stacked inlines """
     name = models.CharField(max_length=50)
 
+    class Meta:
+        verbose_name = 'Stacked Inline Test'
+        verbose_name_plural = 'Stacked Inline Tests'
+
     def __unicode__(self):
         return self.name
 
 
 class StackedInlineChild(AllFields):
     parent = models.ForeignKey(StackedInlineTest, related_name='inlines')
+
+    class Meta:
+        verbose_name = 'Stacked Inline Child'
+        verbose_name_plural = 'Stacked Inline Children'
 
     def __unicode__(self):
         return self.title
@@ -100,12 +108,20 @@ class TabularInlineTest(models.Model):
     """ For testing stacked inlines """
     name = models.CharField(max_length=50)
 
+    class Meta:
+        verbose_name = 'Tabular Inline Test'
+        verbose_name_plural = 'Tabular Inline Tests'
+
     def __unicode__(self):
         return self.name
 
 
 class TabularInlineChild(AllFields):
     parent = models.ForeignKey(TabularInlineTest, related_name='inlines')
+
+    class Meta:
+        verbose_name = 'Tabular Inline Child'
+        verbose_name_plural = 'Tabular Inline Children'
 
     def __unicode__(self):
         return self.title
