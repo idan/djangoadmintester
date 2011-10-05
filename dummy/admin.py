@@ -1,27 +1,28 @@
 from django.contrib import admin
-from .models import (FieldTest, Manufacturer, Car, Pizza, Topping, Author, Book,
-                     Composer, Song)
+from .models import (FieldTest, FKParent, FKChild, M2MParent, M2MChild,
+                     StackedInlineTest, StackedInlineChild,
+                     TabularInlineTest, TabularInlineChild)
 
 admin.site.register(FieldTest, admin.ModelAdmin)
-admin.site.register(Manufacturer, admin.ModelAdmin)
-admin.site.register(Car, admin.ModelAdmin)
-admin.site.register(Pizza, admin.ModelAdmin)
-admin.site.register(Topping, admin.ModelAdmin)
+admin.site.register(FKParent, admin.ModelAdmin)
+admin.site.register(FKChild, admin.ModelAdmin)
+admin.site.register(M2MParent, admin.ModelAdmin)
+admin.site.register(M2MChild, admin.ModelAdmin)
 
 
-class BookInline(admin.TabularInline):
-    model = Book
+class StackedChild(admin.StackedInline):
+    model = StackedInlineChild
 
 
-class AuthorAdmin(admin.ModelAdmin):
-    inlines = [BookInline]
-admin.site.register(Author, AuthorAdmin)
+class StackedAdmin(admin.ModelAdmin):
+    inlines = [StackedChild]
+admin.site.register(StackedInlineTest, StackedAdmin)
 
 
-class SongInline(admin.StackedInline):
-    model = Song
+class TabularChild(admin.TabularInline):
+    model = TabularInlineChild
 
 
-class ComposerAdmin(admin.ModelAdmin):
-    inlines = [SongInline]
-admin.site.register(Composer, ComposerAdmin)
+class TabularAdmin(admin.ModelAdmin):
+    inlines = [TabularChild]
+admin.site.register(TabularInlineTest, TabularAdmin)

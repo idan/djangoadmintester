@@ -1,7 +1,7 @@
 from django.db import models
 
 
-class FieldTest(models.Model):
+class AllFields(models.Model):
     m_CharField = models.CharField("CharField", max_length=50)
     m_BooleanField = models.BooleanField("BooleanField")
     m_NullBooleanField = models.NullBooleanField("NullBooleanField")
@@ -19,29 +19,48 @@ class FieldTest(models.Model):
     m_TimeField = models.TimeField("TimeField")
     m_DateTime = models.DateTimeField("DateTime")
 
+    class Meta:
+        abstract = True
+
     def __unicode__(self):
         return self.m_CharField
 
 
-class Manufacturer(models.Model):
+class FieldTest(AllFields):
+    pass
+
+
+class FKParent(models.Model):
     """ For testing FKs. """
     name = models.CharField(max_length=50)
 
+    class Meta:
+        verbose_name = 'FK Parent'
+        verbose_name_plural = 'FK Parents'
+
     def __unicode__(self):
         return self.name
 
 
-class Car(models.Model):
+class FKChild(models.Model):
     """ For testing FKs. """
     name = models.CharField(max_length=50)
-    manufacturer = models.ForeignKey(Manufacturer, related_name='cars')
+    manufacturer = models.ForeignKey(FKParent, related_name='children')
+
+    class Meta:
+        verbose_name = 'FK Child'
+        verbose_name_plural = 'FK Children'
 
     def __unicode__(self):
         return self.name
 
 
-class Pizza(models.Model):
+class M2MParent(models.Model):
     """ For testing m2m """
+
+    class Meta:
+        verbose_name = 'M2M Parent'
+        verbose_name_plural = 'M2M Parents'
 
     name = models.CharField(max_length=50)
 
@@ -49,16 +68,20 @@ class Pizza(models.Model):
         return self.name
 
 
-class Topping(models.Model):
+class M2MChild(models.Model):
     """ For testing m2m """
     name = models.CharField(max_length=50)
-    pizzas = models.ManyToManyField(Pizza, related_name='toppings')
+    parents = models.ManyToManyField(M2MParent, related_name='children')
+
+    class Meta:
+        verbose_name = 'M2M Child'
+        verbose_name_plural = 'M2M Children'
 
     def __unicode__(self):
         return self.name
 
 
-class Author(models.Model):
+class StackedInlineTest(models.Model):
     """ For testing stacked inlines """
     name = models.CharField(max_length=50)
 
@@ -66,25 +89,23 @@ class Author(models.Model):
         return self.name
 
 
-class Book(models.Model):
-    title = models.CharField(max_length=50)
-    author = models.ForeignKey(Author, related_name='books')
+class StackedInlineChild(AllFields):
+    parent = models.ForeignKey(StackedInlineTest, related_name='inlines')
 
     def __unicode__(self):
         return self.title
 
 
-class Composer(models.Model):
-    """ For testing tabular inliens """
+class TabularInlineTest(models.Model):
+    """ For testing stacked inlines """
     name = models.CharField(max_length=50)
 
     def __unicode__(self):
         return self.name
 
 
-class Song(models.Model):
-    title = models.CharField(max_length=50)
-    composer = models.ForeignKey(Composer, related_name='songs')
+class TabularInlineChild(AllFields):
+    parent = models.ForeignKey(TabularInlineTest, related_name='inlines')
 
     def __unicode__(self):
         return self.title
